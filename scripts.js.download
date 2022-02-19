@@ -1,0 +1,620 @@
+// call jRespond and add breakpoints
+var jRes = jRespond([
+    {
+        label: 'mobile',
+        enter: 0,
+        exit: 767
+    },{
+        label: 'tablet',
+        enter: 768,
+        exit: 1199
+    },{
+        label: 'desktop',
+        enter: 1200,
+        exit: 10000
+    }
+]);
+
+$(document).ready(function(){    
+
+	// Desktop
+	jRes.addFunc({
+	    breakpoint: ['desktop'],
+	    enter: function() {
+			// Desktop Primary Navigation Dropdowns
+			$('.primary-nav li').hoverIntent(primaryNavConfig);
+			//change height of the mega menu
+			$('.primary-nav > li#navid-157 > ul > li').hover(function(){
+			    $('.primary-nav > li#navid-157 > ul').css('height','595px');
+			    $('.primary-nav > li#navid-157 > ul').addClass('mega');	
+			    }, function(){
+				$('.primary-nav > li#navid-157 > ul').css('height','auto');
+				$('.primary-nav > li#navid-157 > ul').removeClass("mega");
+			});	
+			$('.primary-nav > li#navid-355 > ul > li').hover(function(){
+			    $('.primary-nav > li#navid-355 > ul').css('height','595px');
+			    $('.primary-nav > li#navid-355 > ul').addClass('mega');	
+			    }, function(){
+				$('.primary-nav > li#navid-355 > ul').css('height','auto');
+				$('.primary-nav > li#navid-355 > ul').removeClass("mega");
+			});	
+			//Home Bucket Hover
+			$('.homeBkt .fauxlink.span1').addClass('hover');
+			$('.homeBkt .fauxlink').hover(function(){
+			$('.homeBkt .fauxlink.span1').toggleClass('hover');	
+			    $(this).toggleClass('hover');
+		    });
+           
+			//Home Banner Toggle 
+			$('.banner-dropdown .button').click(function(event){
+				event.stopPropagation();
+				$(".banner-dropdown .button").toggleClass('open');
+				//$(this).addClass('open');
+		    });
+			$('#content-wrap,#home-banner').on('click',function(){
+				$(".banner-dropdown .button").removeClass('open');
+			});
+	
+	    },
+	    exit: function() {
+			$('.primary-nav li').hoverIntent();
+	    }
+	});
+	
+	
+	// Mobile Navigation
+	$("#primary-toggle").click(function(){
+		$(this).toggleClass("active");
+	    $(".responsive-nav").toggleClass("open");
+		$(".primary-nav ul").removeClass("active");
+		$("html").toggleClass("noscroll");
+	});
+	$(".primary-nav li > i").not("li span.back > i").click(function(){
+		var sibling = $(this).next('ul');	
+		$(sibling).toggleClass("active");
+	});
+	
+	$(".primary-nav li span.back").click(function(){
+		var grandparent = $(this).parent().parent();
+		
+		$(grandparent).removeClass("active");
+	});
+	
+	$("#overlay").click(function(){
+		$("#primary-toggle").removeClass("active");
+	    $(".responsive-nav").removeClass("open");			    
+		$(".primary-nav ul").removeClass("active");
+		$("html").removeClass("noscroll");
+	    $(this).hide();
+	});
+	
+	
+	// Tablet & Mobile
+	jRes.addFunc({
+	    breakpoint: ['tablet','mobile'],
+	    enter: function() {
+            
+    	    if($.isFunction($.fn.slick)){
+				$(".home-banner-buckets").slick({
+					slidesToShow: 2,
+					slidesToScroll: 1,
+					dots: false,
+					arrows: true,
+					infinite: false,
+					responsive: [{
+						breakpoint: 767,
+						settings: {
+							slidesToShow: 1,
+							slidesToScroll: 1
+						}
+					}]
+				});		    	    
+	    	};
+	    	if($('body.page-111').length){
+            	$('#locations-buttons').click(function(){
+                	$(this).toggleClass("open");
+            	});
+        	}
+		    		
+	    },
+	    exit: function() {
+	
+			$(".primary-nav > li").hoverIntent(primaryNavConfig);
+			
+	    }
+	});
+
+	// Mobile
+	jRes.addFunc({
+	    breakpoint: ['mobile'],
+	    enter: function() {
+		    
+			//Home Banner Toggle 
+			$('.footer-block-3 h5,.footer-block-4 h5').click(function(event){
+					event.stopPropagation();
+					$(this).toggleClass('open');
+					$(this).siblings('.mobile-dropdown').toggle();  		         
+				});       
+			$(".mobile-dropdown p,.mobile-dropdown ul").on("click", function (event) {
+					event.stopPropagation();
+			});
+		    		
+	    },
+	    exit: function() {
+			
+	    }
+	});	
+    
+	//Flexslider
+	if($.isFunction($.fn.flexslider)){ 
+		$("#home-banner").flexslider({
+            controlNav: true,
+            directionNav: true,
+            slideshow: true,
+            pauseOnHover: false
+        });
+ 		if($('.gallery.slider.has-pager').length){
+	 		var controlNav = true;
+ 		}else{
+	 		var controlNav = false;
+ 		}
+ 		if($('.gallery.slider.has-arrows').length){
+	 		var directionNav = true;
+ 		}else{
+	 		var directionNav = false;
+ 		}
+ 		if($('.gallery.slider .fancybox').length){
+	 		var selector = '.slides > a';
+ 		}else{
+	 		var selector = '.slides > .img-wrapper';
+ 		}
+ 		$('.gallery.slider').flexslider({
+            controlNav: controlNav,
+            directionNav: directionNav,
+            slideshow: true,
+            pauseOnHover: false,
+			selector: selector
+        });
+ 		$('.gallery.content').flexslider({
+            controlNav: true,
+            directionNav: true,
+            slideshow: true,
+            pauseOnHover: false,
+			selector: '.block'
+        });
+	}
+	
+	//Slick Carousel
+	if($.isFunction($.fn.slick)){ 
+		
+ 		if($('.gallery.carousel.has-arrows').length){
+	 		var arrows = true;
+ 		}else{
+	 		var arrows = false;
+ 		}
+		var countD = parseInt($('.gallery.carousel').attr('data-count'));
+		var countT = countD - 1;
+		var countM = countT - 2;
+		if(countT <= 1){
+			var countT = 1;
+		}
+		if(countM <= 1){
+			var countM = 1;
+		}
+		$(".carousel").slick({
+			slidesToShow: countD,
+			slidesToScroll: countD,
+			dots: false,
+			arrows: arrows,
+			infinite: false,
+			responsive: [{
+				breakpoint: 1199,
+				settings: {
+					slidesToShow: countT,
+					slidesToScroll: countT
+				}
+				},
+				{
+				breakpoint: 767,
+				settings: {
+					slidesToShow: countM,
+					slidesToScroll: countM
+				}
+			}]
+		});	
+	}
+	
+		
+	//Content Blocks Tabbed Content
+	if($('.tabbed-content').length){
+		$('.tab-pane').each(function(){
+			var title = $(this).attr('data-title');
+			var href = $(this).attr('id');
+			$(this).closest('.tabbed-content').find('.nav-tabs').append('<li><a data-toggle="tab" href="#'+href+'">'+title+'</a></li>');
+			$('.nav-tabs li:first').addClass("active");
+		});
+	}
+	
+	//Shifty Form Labels
+	$('form .input-group:not(.checkbox) input, form .input-group select, form .input-group textarea').focusin(function(){
+		$(this).parents('.input-group').find('label').removeClass('hidden').addClass('focus');
+	}).focusout(function(){
+		$('form .input-group:not(.checkbox) input, form .input-group select, form .input-group textarea').each(function(){
+			if($(this).val() === '') {
+				$(this).parents('.input-group').find('label').removeClass('focus');			
+			} else {
+				$(this).parents('.input-group').find('label').addClass('hidden');			
+			}
+		});
+	}).blur();
+	$('form .input-group label').click(function(){
+		$(this).parents('.input-group').find('input,select,textarea').focus();
+	});
+	
+	// Faux Links
+    $('.fauxlink').click(function(){
+		var href = '/' + $(this).find('a').attr('href');
+		if ($(this).find('a').attr('target') != '_blank'){
+			window.location.href = href;
+		} else {
+			window.open(href,'_blank');	
+		}
+	});
+    $(window).scroll(function() {
+		if ($(this).scrollTop() > 38){  
+		    $('#header').addClass("sticky");
+		     }
+		    else{
+		    $('#header').removeClass("sticky");
+		}
+    });	
+	// Anchor Link Animations
+    $("#back-top").click(function (){
+        $("body,html").animate({
+            scrollTop: 0
+        }, 800);
+        return false;
+    });
+    	
+	//Fancybox for Gallery and Video
+	if($.isFunction($.fn.fancybox)){
+		$(".fancybox").fancybox({
+			infobar: true,
+			loop: true,
+		    afterLoad: function( instance, current ) {
+	            $('.fancybox-button--close').prependTo('.fancybox-image-wrap');
+	        },
+            caption : function( instance, current ) {
+		    var caption = $(this).data('caption') || '';
+		    return ( caption.length ? caption + '' : '' ) + "<a class='gallery-rfq button red-btn' href='http://chesterfieldsteel.topspotims.modxcloud.com/rfq/'>"+ "Get In Touch" + "</a>";
+		    }
+		});
+	}
+
+    // Convert image to svg code
+    $(".svg-convert").svgConvert();
+	
+	//Search Toggle 
+	$('.search-container .fa-search').click(function(){
+		$(this).toggleClass('open');
+		$('.search-container').addClass("active");
+		$('.search-container .search-form input.search-input').focus();
+		$('#content-wrap,#home-banner,#inner-banner').on('click',function(){
+		$('.search-container').removeClass("active");
+		});
+    });	
+    	
+    // IE Placeholder/Value
+    $("[placeholder]").focus(function(){
+        var input = $(this);
+        if(input.val() == input.attr("placeholder")){
+            input.val("");
+            input.removeClass("placeholder");
+        }
+    });
+    $("[placeholder]").blur(function(){
+        var input = $(this);
+        if(input.val() == "" || input.val() == input.attr("placeholder")){
+            input.addClass("placeholder");
+            input.val(input.attr("placeholder"));
+        }
+    });
+    $("[placeholder]").parents("form").submit(function(){
+        $(this).find("[placeholder]").each(function(){
+            var input = $(this);
+            if(input.val() == input.attr("placeholder")){
+                input.val("");
+            }
+        });
+    });
+   
+    
+	// Accessible Form Validation
+    // $('.forms .submit').click(function (e) {
+	   // $('.forms').removeClass('currentForm');
+	   // $(this).parent().addClass('currentForm');
+    //     $(".currentForm span.errorMessage").remove(".errorMessage");
+        
+    //     $('.currentForm input.required,.currentForm textarea.required').not("input#token").each(function () {
+		  //  var placeholder = $(this).attr("placeholder");
+	   //     var label = $(this).parent().find("label").text().replace('*', '');
+	        
+    //         $(this).removeAttr('style');
+
+    //         if (!this.value || $(this).val() == placeholder) {
+	   //         e.preventDefault();
+		            
+	   //     	$(this).after('<span class="errorMessage">Enter '+label+'<\/span>');
+	   //         $(this).attr('style','border:1px solid red;');
+    //         } else {
+    //         	$(this).removeAttr("aria-invalid");
+    //         };
+    //     });
+    //     //validate select box
+    //     $('.currentForm select.required').not("input#token").each(function () {
+		  //  var placeholder = $(this).attr("placeholder");
+	   //     var label = $(this).parent().parent().find("label").text().replace('*', '');
+	        
+    //         $(this).removeAttr('style');
+
+    //         if (!this.value || $(this).val() == placeholder) {
+	   //         e.preventDefault();
+		            
+	   //     	$(this).parent().after('<span class="errorMessage">Enter '+label+'<\/span>');
+	   //         $(this).parent().attr('style','border:1px solid red;');
+    //         } else {
+    //         	$(this).removeAttr("aria-invalid");
+    //         };
+    //     });
+        
+    //     if($(this).closest("form").find('.required #file-uploader-image').length){
+    //         var ajaxupload = $(this).closest("form").find('.required #file-uploader-image');
+    //         if(!ajaxupload.find('.file-wrap').length){
+    //           e.preventDefault();
+    //           $('<span class="errorMessage">Please upload a file.</span>').insertAfter(ajaxupload);
+    //         }
+    //     }
+        
+        
+    // });
+	
+	 // Cookie Policy popup for users on IE 8/9
+    if($("html").hasClass("oldie")) {
+		if(!(Cookies.get('browserIE'))){
+			console.log("Cookie set");
+			$("#update-browser").show();
+			Cookies.set('browserIE', 'visited', { expires: 7 });
+		}
+		else {
+			$("#update-browser").hide();
+			console.log("Cookie removed");
+		}	
+		$(".update-browser-close").click(function(){
+			$("#update-browser").slideUp();
+		});
+	}
+	
+	// Calculators
+    if($('body#id-155').length){
+          $('#cw').submit(function(e){
+            e.preventDefault();
+            var od = $('#cw-od').val();
+            var id = $('#cw-id').val();
+            var width = $('#cw-width').val();
+            var calc = ((((od/2) * (od/2)) * 3.1457) - (((id/2) * (id/2)) * 3.1457)) * .2833 * width;
+            var new_calc = calc.toFixed(0);
+            $('#cw-result').empty().append(new_calc);
+
+            var cresult = $(this).find(".result").html().replace(/(<([^>]+)>)/ig,"");
+            $("#cw-rfq-br").remove();
+            $( "<br id='cw-rfq-br' />" ).insertBefore("#cw-rfq-link");
+            $("#cw-rfq-link").empty().append('&nbsp;&nbsp; <a class="button" href="https://www.steelwarehouse.com/rfq?cresult=' + cresult.replace("Request a Quote","")+'">Request a Quote</a>');
+            
+            $(this).find(".result").addClass("active");
+           
+        });
+        
+        $('#cwc').submit(function(e){
+            e.preventDefault();
+            var diameter = $('#cwc-diameter').val();
+            var gauge = $('#cwc-gauge').val();
+            var calc = (((diameter/2) * (diameter/2)) * 3.1457) * .2833 * gauge;
+            var new_calc = calc.toFixed(1);
+            $('#cwc-result').empty().append(new_calc);
+
+            var cresult = $(this).find(".result").html().replace(/(<([^>]+)>)/ig,"");
+            $("#cwc-rfq-br").remove();
+            $( "<br id='cwc-rfq-br' />" ).insertBefore("#cwc-rfq-link");
+            $("#cwc-rfq-link").empty().append('&nbsp;&nbsp; <a class="button" href="https://www.steelwarehouse.com/rfq?cresult=' + cresult.replace("Request a Quote","")+'">Request a Quote</a>');
+            
+            $(this).find(".result").addClass("active");
+        });
+        
+        $('#mc').submit(function(e){
+            e.preventDefault();
+            var id = $('#mc-id').val();
+            var width = $('#mc-width').val();
+            var weight = $('#mc-weight').val();
+            var calc1 = Math.sqrt((((weight/width)/.2833) + (((id/2) * (id/2)) * 3.14)) / 3.14) * 2;
+            var calc2 = weight/width;
+            var new_calc1 = calc1.toFixed(1);     
+            var new_calc2 = calc2.toFixed(0);       
+            $('#mc-result-1').empty().append(new_calc1);
+            $('#mc-result-2').empty().append(new_calc2);
+            
+            var cresult = $(this).find(".result").html().replace(/(<([^>]+)>)/ig,"");
+            $("#mc-rfq-br").remove();
+            $( "<br id='mc-rfq-br' />" ).insertBefore("#mc-rfq-link");
+            $("#mc-rfq-link").empty().append('&nbsp;&nbsp; <a class="button" href="https://www.steelwarehouse.com/rfq?cresult=' + cresult.replace("Request a Quote","")+'">Request a Quote</a>');
+
+            $(this).find(".result").addClass("active");
+        });
+        
+        $('#fsw').submit(function(e){
+            e.preventDefault();
+            var thick = $('#fsw-thickness').val();
+            var width = $('#fsw-width').val();
+            var length = $('#fsw-length').val();
+            var calc =  thick * width * length * .2833;
+            var new_calc = calc.toFixed(1);
+            $('#fsw-result').empty().append(new_calc);
+            
+            var cresult = $(this).find(".result").html().replace(/(<([^>]+)>)/ig,"");
+            $("#fsw-rfq-br").remove();
+            $( "<br id='fsw-rfq-br' />" ).insertBefore("#fsw-rfq-link");
+            $("#fsw-rfq-link").empty().append('&nbsp;&nbsp; <a class="button" href="https://www.steelwarehouse.com/rfq?cresult=' + cresult.replace("Request a Quote","")+'">Request a Quote</a>');
+            
+            $(this).find(".result").addClass("active");
+        });
+        
+        $('#clf').submit(function(e){
+            e.preventDefault();
+            var thick = $('#clf-thickness').val();
+            var width = $('#clf-width').val();
+            var weight = $('#clf-weight').val();
+            var calc =  (weight/(thick * width * .2833))/12;
+            var new_calc = calc.toFixed(1);
+            $('#clf-result').empty().append(new_calc);
+            
+            var cresult = $(this).find(".result").html().replace(/(<([^>]+)>)/ig,"");
+            $("#clf-rfq-br").remove();
+            $( "<br id='clf-rfq-br' />" ).insertBefore("#clf-rfq-link");
+            $("#clf-rfq-link").empty().append('&nbsp;&nbsp; <a class="button" href="https://www.steelwarehouse.com/rfq?cresult=' + cresult.replace("Request a Quote","")+'">Request a Quote</a>');
+            
+            $(this).find(".result").addClass("active");
+        });
+        
+        $('#cfw').submit(function(e){
+            e.preventDefault();
+            var thick = $('#cfw-thickness').val();
+            var width = $('#cfw-width').val();
+            var length = $('#cfw-length').val();
+            var calc =  thick * width * (length * 12) * .2833;
+            var new_calc = calc.toFixed(1);
+            $('#cfw-result').empty().append(new_calc);
+
+            var cresult = $(this).find(".result").html().replace(/(<([^>]+)>)/ig,"");
+            $("#cfw-rfq-br").remove();
+            $( "<br id='cfw-rfq-br' />" ).insertBefore("#cfw-rfq-link");
+            $("#cfw-rfq-link").empty().append('&nbsp;&nbsp; <a class="button" href="https://www.steelwarehouse.com/rfq?cresult=' + cresult.replace("Request a Quote","")+'">Request a Quote</a>');
+
+            $(this).find(".result").addClass("active");
+        });
+        
+        $('.clear-calculator').click(function(){
+            $(this).closest('form').find('input[type="number"]').val("");
+        });
+
+    }
+		//   //Tabbed Content
+    $('#tabs-menu a').click(function(e) {
+        e.preventDefault();
+        $(this).parent().addClass('current');
+        $(this).parent().siblings().removeClass('current');
+        var link = $(this).attr('href');
+        $('.tab-contents').not(link).css('display', 'none');
+        $('#tab-content-wrapper > div').removeClass('current');
+        $(link).show().parent().addClass('current');
+    });
+    
+    //Hide tab if content is empty
+	$('#content-tabs div[id^=tab]').each(function(){
+        if( !$.trim( $(this).html() ).length ) {
+            var id = '"#';
+            id += $(this).attr('id');
+            id += '"';
+            $(this).parent().hide(); 
+            $('#content-tabs #tabs-menu a[href^='+id+']').parent().remove(); 
+        }
+    });
+    $('#tabs-menu').not(':has(a)').parent().parent().remove();
+    
+    
+	//Tabbed Content Mobile Navigation
+    var tab = $('#tabs-menu li');
+	var currentTab = tab.filter('.current');
+	$('span.next').on('click', function() {
+		var nextItem = currentTab.next();
+		currentTab.removeClass('current');
+		$("#tab-content-wrapper > div").removeClass('current');
+		if ( nextItem.length ) {
+        currentTab = nextItem.addClass('current');
+		} 
+		getContent(nextItem.find('a').attr('href'));
+	});
+	$('span.prev').on('click', function() {
+		var prevItem = currentTab.prev();
+		currentTab.removeClass('current');
+		$("#tab-content-wrapper > div").removeClass('current');
+		if ( prevItem.length ) {
+        currentTab = prevItem.addClass('current');
+		} 
+		getContent(prevItem.find('a').attr('href'));
+	});
+	
+	$('#tabs-wrapper .next').click(function() {
+		$('.prev').removeClass('disabled');
+		if($('.last').hasClass('show')){
+			$('.next').addClass('disabled');
+        } 
+    });
+	$('#tabs-wrapper .prev').click(function() {
+		$('.next').removeClass('disabled');
+		if($('.first').hasClass('show')){
+			$('.prev').addClass('disabled');
+        } 
+    });
+    //Scroll to section
+    $("#valast-jump").click(function() {
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $("#valast-in-real-time").offset().top
+    }, 2000);
+});
+    // End Default Scripts
+
+    if ($("#newsletter-modal-contents-modal").length > 0){
+        setTimeout(function () {$("#newsletter-modal-contents-modal").modal('show')}, 2000);
+    }
+    $(".rfq-btn").hide();
+    
+    // Scroll to Quick Contact
+	$(".qc-jump").click(function(){
+		var position = $('.qc-wrap').offset();
+		var offset = position.top - 125;
+		$("body,html").animate({
+            scrollTop: offset
+        }, 800);
+	});
+    
+}); //end of document.ready
+
+
+
+$(window).load(function(){
+    if ($(".topspot-catalog-cart-number").length && parseInt($(".topspot-catalog-cart-number").text())<1){
+        $(".rfq-btn").text("Request A Quote");
+    }
+    $(".rfq-btn").show();
+    if($(".page-158").length>0) {
+        console.log("hi");
+        if ($(".topspot-catalog-cart-product-table").length) {
+            $(".cart-quantity-handle").css("display", "none");    
+            $(".cart-file-handle").removeClass("w50").addClass("w100");
+        }
+    }
+});
+
+
+    
+    
+//primaryNav Hover Intent Configuration
+var primaryNavConfig = {
+    sensitivity: 10,
+    interval: 100,
+    over: primaryOver,
+    out: primaryOut,
+    timeout: 250
+};
+
+function primaryOver(){$(this).find(">ul").slideDown('fast'); $(this).addClass("hover");}
+function primaryOut(){$(this).find(">ul").slideUp('fast'); $(this).removeClass("hover");}
